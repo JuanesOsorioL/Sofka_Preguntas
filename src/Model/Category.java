@@ -1,13 +1,15 @@
-
 package Model;
 
-public class Category {
-    private String name;
-    private Question [] Question;
+import java.util.ArrayList;
 
-    public Category(String name, Question[] Question) {
+public class Category {
+
+    private String name;
+    private ArrayList<Question> lstQuestion;
+
+    public Category(String name, ArrayList<Question> lstQuestion) {
         this.name = name;
-        this.Question = Question;
+        this.lstQuestion = lstQuestion;
     }
 
     public String getName() {
@@ -18,13 +20,12 @@ public class Category {
         this.name = name;
     }
 
-    public Question[] getQuestion() {
-        return Question;
+    public ArrayList<Question> getLstQuestion() {
+        return lstQuestion;
     }
 
-    public void setQuestion(Question[] Question) {
-        this.Question = Question;
+    public void setLstQuestion(ArrayList<Question> lstQuestion) {
+        this.lstQuestion = lstQuestion;
     }
-    
-    
+
 }

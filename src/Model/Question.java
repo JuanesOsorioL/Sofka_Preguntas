@@ -1,13 +1,15 @@
-
 package Model;
 
-public class Question {
-    private String titulo;
-    private Option[] Option;
+import java.util.ArrayList;
 
-    public Question(String titulo, Option[] Option) {
+public class Question {
+
+    private String titulo;
+    private ArrayList<Option> lstOption;
+
+    public Question(String titulo, ArrayList<Option> lstOption) {
         this.titulo = titulo;
-        this.Option = Option;
+        this.lstOption = lstOption;
     }
 
     public String getTitulo() {
@@ -18,14 +20,12 @@ public class Question {
         this.titulo = titulo;
     }
 
-    public Option[] getOption() {
-        return Option;
+    public ArrayList<Option> getLstOption() {
+        return lstOption;
     }
 
-    public void setOption(Option[] Option) {
-        this.Option = Option;
+    public void setLstOption(ArrayList<Option> lstOption) {
+        this.lstOption = lstOption;
     }
-    
-    
-    
+
 }
