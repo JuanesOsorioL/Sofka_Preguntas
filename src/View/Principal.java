@@ -25,7 +25,8 @@ public class Principal {
             System.out.println("1. Configurar Preguntas por defecto.");
             System.out.println("2. Configurar Preguntas.");
             System.out.println("3. Jugar.");
-            System.out.println("4. Salir.");
+            System.out.println("4. Historial.");
+            System.out.println("5. Salir.");
             menu = Integer.parseInt(input.nextLine());
 
             switch (menu) {
@@ -35,16 +36,14 @@ public class Principal {
                     break;
 
                 case 2:
-
                     ArrayList<Category> listCategory = new ArrayList<Category>();
-                    for (int i = 0; i < 1; i++) {
+                    for (int i = 0; i < 5; i++) {
                         ArrayList<Question> listQuestion = new ArrayList<Question>();
                         System.out.print("Ingrese Nombre de la Categoria: ");
                         String nameCategory = input.nextLine();
                         System.out.print("Ingrese el nivel de dificultad de la Categoria en una escala de 1 a 5. no repetir numeros: ");
                         int Level = Integer.parseInt(input.nextLine());
-
-                        for (int j = 0; j < 2; j++) {
+                        for (int j = 0; j < 5; j++) {
                             System.out.print("Pregunta " + (j + 1) + " : ");
                             String nameQuestion = input.nextLine();
                             ArrayList<Option> listAnwer = new ArrayList<Option>();
@@ -58,19 +57,16 @@ public class Principal {
                                 }
                                 String answer = input.nextLine();
                                 Option respuesta = new Option(answer, correct);
-
                                 listAnwer.add(k, respuesta);
                             }
                             Question question = new Question(nameQuestion, listAnwer);
                             listQuestion.add(j, question);
                         }
-                        Category = new Category(nameCategory, listQuestion, Level);
+                        Category = new Category(nameCategory, listQuestion, (Level-1));
                         listCategory.add(i, Category);
                     }
-
                     round = new Round(listCategory);
                     setting = true;
-
                     break;
 
                 case 3:
@@ -84,21 +80,19 @@ public class Principal {
                         for (int i = 0; i < 5; i++) {
                             selectCategory = new Category(round.SelecCategory(i));
                             System.out.println(selectCategory.getName());
-                            System.out.println(selectCategory.getLevel() + 1);
+                            System.out.println("Nivel : "+(selectCategory.getLevel() + 1));
                             selectQuestion = new Question(selectCategory.randomQuestion());
                             System.out.println(selectQuestion.getTitulo());
                             selectQuestion.randomoptions();
                             int n = input.nextInt();
-
                             if (selectQuestion.validate(n)) {
-                                System.out.println("Respuesta correcta");
-                                System.out.println("Premio acumulado actual = " + win.winQuestion(i + 1));
-
+                                System.out.println("Respuesta correcta!!!!!");
+                                System.out.println("Puntuación actual = " + win.winQuestion(i + 1));
                                 if ((selectCategory.getLevel() + 1) == 5) {
-                                    System.out.println("Felicitaciones LLegaste al final con una puntuacion perfecta.");
+                                    System.out.println("Felicitaciones LLegaste al final con una Puntuación perfecta.");
                                     n = 2;
                                 } else {
-                                    System.out.println("Quieres seguir con el proximo nivel?.");
+                                    System.out.println("Quieres seguir con el próximo nivel?.");
                                     System.out.println("1. Si");
                                     System.out.println("2. No");
                                     n = input.nextInt();
@@ -111,24 +105,32 @@ public class Principal {
                             } else {
                                 System.out.println("Respuesta incorrecta");
                                 control = false;
-                                System.out.println("Acumulado actual = " + win.getPremio());
+                                System.out.println("Puntuación actual = " + win.getPremio());
                                 savePlayer(win.getNombre(), Date, win.getPremio(), selectCategory.getLevel());
                                 i = 5;
                             }
                         }
                     } else {
-                        System.out.println("Primero!! Registre las preguntas");
+                        System.out.println("Primero!! Registra las preguntas");
                     }
                     break;
                 case 4:
+                     BDUtils.GetHistorial();
+                    break;
+
+                    case 5:
                     control = false;
                     break;
+                    
                 default:
                     break;
             }
         }
     }
 
+    
+    
+    
     public static void savePlayer(String player, LocalDate fecha, int score, int level) throws SQLException {
         try {
             BDUtils.Connection();
@@ -145,16 +147,20 @@ public class Principal {
         }
     }
 
+    //se realizo esta funcion ya que no tenia claro si el programa debia de tener ya definidaslas preguntas 
+    //"Precondiciones: Debe de tener 25 preguntas (5 preguntas por categorías) para 5 rondas"
+    
     public static Round defaultQuestion(Round round) {
+        
         ArrayList<Category> listCategory = new ArrayList<Category>();
         ///////////////////////////categoria1
         ArrayList<Question> listQuestion = new ArrayList<Question>();
         // pretunta 1
         ArrayList<Option> listAnwer1 = new ArrayList<Option>();
-        Option opt1 = new Option("30 minutos ", true);
-        Option opt2 = new Option("40 minutos ", false);
-        Option opt3 = new Option("60 minutos ", false);
-        Option opt4 = new Option("20 minutos ", false);
+        Option opt1 = new Option("30 minutos", true);
+        Option opt2 = new Option("40 minutos", false);
+        Option opt3 = new Option("60 minutos", false);
+        Option opt4 = new Option("20 minutos", false);
         listAnwer1.add(opt1);
         listAnwer1.add(opt2);
         listAnwer1.add(opt3);
@@ -162,7 +168,7 @@ public class Principal {
         Question ques1 = new Question("¿Cuánto dura la prórroga en un partido de fútbol?", listAnwer1);
         // pretunta 2
         ArrayList<Option> listAnwer2 = new ArrayList<Option>();
-        Option opt5 = new Option("Brasil ", true);
+        Option opt5 = new Option("Brasil", true);
         Option opt6 = new Option("Argentina", false);
         Option opt7 = new Option("Colombia", false);
         Option opt8 = new Option("Venezuela", false);
@@ -210,7 +216,7 @@ public class Principal {
         listQuestion.add(ques4);
         listQuestion.add(ques5);
 
-        Category Category1 = new Category("deportes", listQuestion, 0);
+        Category Category1 = new Category("Categoria de DEPORTES", listQuestion, 0);
         listCategory.add(Category1);
 
         //////////////////////////////////categoria2
@@ -276,17 +282,17 @@ public class Principal {
         listQuestion1.add(ques9);
         listQuestion1.add(ques10);
 
-        Category Category3 = new Category("arte", listQuestion1, 2);
+        Category Category3 = new Category("Categoria de ARTE", listQuestion1, 2);
         listCategory.add(Category3);
 
         //////////////////////////////////categoria3
         ArrayList<Question> listQuestion2 = new ArrayList<Question>();
         //1
         ArrayList<Option> listAnwer11 = new ArrayList<Option>();
-        Option opt41 = new Option("La ballena azul", true);
-        Option opt42 = new Option("tiburon", false);
-        Option opt43 = new Option("tortuga", false);
-        Option opt44 = new Option("delfin", false);
+        Option opt41 = new Option("Ballena azul", true);
+        Option opt42 = new Option("Tiburon", false);
+        Option opt43 = new Option("Tortuga", false);
+        Option opt44 = new Option("Delfin", false);
         listAnwer11.add(opt41);
         listAnwer11.add(opt42);
         listAnwer11.add(opt43);
@@ -294,7 +300,7 @@ public class Principal {
         Question ques11 = new Question("¿Cuál es el mamífero marino más grande?", listAnwer11);
         //2
         ArrayList<Option> listAnwer12 = new ArrayList<Option>();
-        Option opt45 = new Option("El guepardo", true);
+        Option opt45 = new Option("Guepardo", true);
         Option opt46 = new Option("Leon", false);
         Option opt47 = new Option("Tigre", false);
         Option opt48 = new Option("Aguila", false);
@@ -305,7 +311,7 @@ public class Principal {
         Question ques12 = new Question("¿Cuál es el mamífero más rápido del mundo?", listAnwer12);
         //3
         ArrayList<Option> listAnwer13 = new ArrayList<Option>();
-        Option opt49 = new Option("El avestruz", true);
+        Option opt49 = new Option("Avestruz", true);
         Option opt50 = new Option("Aguila", false);
         Option opt51 = new Option("Condor", false);
         Option opt52 = new Option("Guacamaya", false);
@@ -327,10 +333,10 @@ public class Principal {
         Question ques14 = new Question("¿En qué país habita el dragón de Komodo?", listAnwer14);
         //5
         ArrayList<Option> listAnwer15 = new ArrayList<Option>();
-        Option opt57 = new Option("El perezoso de tres dedos", true);
-        Option opt58 = new Option("tortuga", false);
-        Option opt59 = new Option("pez", false);
-        Option opt60 = new Option("hormiga", false);
+        Option opt57 = new Option("Perezoso de tres dedos", true);
+        Option opt58 = new Option("Tortuga", false);
+        Option opt59 = new Option("Pez", false);
+        Option opt60 = new Option("Hormiga", false);
         listAnwer15.add(opt57);
         listAnwer15.add(opt58);
         listAnwer15.add(opt59);
@@ -342,7 +348,7 @@ public class Principal {
         listQuestion2.add(ques14);
         listQuestion2.add(ques15);
 
-        Category Category2 = new Category("animales", listQuestion2, 1);
+        Category Category2 = new Category("Categoria de ANIMALES", listQuestion2, 1);
         listCategory.add(Category2);
 
         //////////////////////////categoria4
@@ -360,10 +366,10 @@ public class Principal {
         Question ques16 = new Question("¿Cuántos planetas conforman el sistema solar?", listAnwer16);
         //2
         ArrayList<Option> listAnwer17 = new ArrayList<Option>();
-        Option opt65 = new Option("venus", true);
-        Option opt66 = new Option("marte", false);
-        Option opt67 = new Option("mercurio", false);
-        Option opt68 = new Option("jupiter", false);
+        Option opt65 = new Option("Venus", true);
+        Option opt66 = new Option("Marte", false);
+        Option opt67 = new Option("Mercurio", false);
+        Option opt68 = new Option("Jupiter", false);
         listAnwer17.add(opt65);
         listAnwer17.add(opt66);
         listAnwer17.add(opt67);
@@ -371,10 +377,10 @@ public class Principal {
         Question ques17 = new Question("¿Qué planeta posee la atmósfera más caliente del sistema solar?", listAnwer17);
         //3
         ArrayList<Option> listAnwer18 = new ArrayList<Option>();
-        Option opt69 = new Option("tierra", true);
-        Option opt70 = new Option("mercurio", false);
-        Option opt71 = new Option("venus", false);
-        Option opt72 = new Option("marte", false);
+        Option opt69 = new Option("Tierra", true);
+        Option opt70 = new Option("Mercurio", false);
+        Option opt71 = new Option("Venus", false);
+        Option opt72 = new Option("Marte", false);
         listAnwer18.add(opt69);
         listAnwer18.add(opt70);
         listAnwer18.add(opt71);
@@ -382,10 +388,10 @@ public class Principal {
         Question ques18 = new Question("¿Cuál es el planeta más denso del sistema solar?", listAnwer18);
         //4
         ArrayList<Option> listAnwer19 = new ArrayList<Option>();
-        Option opt73 = new Option("jupiter", true);
-        Option opt74 = new Option("tierra", false);
-        Option opt75 = new Option("marte", false);
-        Option opt76 = new Option("pluton", false);
+        Option opt73 = new Option("Jupiter", true);
+        Option opt74 = new Option("Tierra", false);
+        Option opt75 = new Option("Marte", false);
+        Option opt76 = new Option("Pluton", false);
         listAnwer19.add(opt73);
         listAnwer19.add(opt74);
         listAnwer19.add(opt75);
@@ -393,10 +399,10 @@ public class Principal {
         Question ques19 = new Question("¿Cuál es el planeta con más edad del sistema solar?", listAnwer19);
         //5
         ArrayList<Option> listAnwer20 = new ArrayList<Option>();
-        Option opt77 = new Option("marte", true);
-        Option opt78 = new Option("tierra", false);
-        Option opt79 = new Option("jupiter", false);
-        Option opt80 = new Option("urano", false);
+        Option opt77 = new Option("Marte", true);
+        Option opt78 = new Option("Tierra", false);
+        Option opt79 = new Option("Jupiter", false);
+        Option opt80 = new Option("Urano", false);
         listAnwer20.add(opt77);
         listAnwer20.add(opt78);
         listAnwer20.add(opt79);
@@ -408,7 +414,7 @@ public class Principal {
         listQuestion3.add(ques19);
         listQuestion3.add(ques20);
 
-        Category Category4 = new Category("sistema solar", listQuestion3, 3);
+        Category Category4 = new Category("Categoria de SISTEMA SOLAR", listQuestion3, 3);
         listCategory.add(Category4);
 
         //////////////////////////categoria5
@@ -474,7 +480,7 @@ public class Principal {
         listQuestion4.add(ques24);
         listQuestion4.add(ques25);
 
-        Category Category5 = new Category("matematicas", listQuestion4, 4);
+        Category Category5 = new Category("Categoria de MATEMATICAS", listQuestion4, 4);
         listCategory.add(Category5);
         round = new Round(listCategory);
         return round;

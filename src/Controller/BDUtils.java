@@ -13,14 +13,20 @@ public class BDUtils {
     private static Statement statement = null;
     private static ResultSet resultSet = null;
 
-    private static ResultSet ID = null;
+    public static Connection getConnection() {
+        return connection;
+    }
+
+    public static void setConnection(Connection connection) {
+        BDUtils.connection = connection;
+    }
 
     public static void Connection() throws SQLException {
         connection = DriverManager.getConnection(MYSQLDB, MYSQLDB_USER, MYSQLDB_PASSWORD);
         statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
     }
 
-    public static int setGuardar(String Player,LocalDate Fecha,int Score,int Level) throws SQLException {
+    public static int setGuardar(String Player, LocalDate Fecha, int Score, int Level) throws SQLException {
         String sqlPlayer = "INSERT INTO `HISTORIAL` (`Player`, `Date`, `Score`, `Level`) "
                 + "VALUES ('" + Player + "','" + Fecha + "'," + Score + "," + Level + ")";
         PreparedStatement preparedStatement = connection.prepareStatement(sqlPlayer);
@@ -39,40 +45,20 @@ public class BDUtils {
         }
     }
 
-    public static void GetGanadores() throws SQLException {
-        StringBuilder PrimerPuesto = new StringBuilder();
-        StringBuilder SegundoPuesto = new StringBuilder();
-        StringBuilder TercerPuesto = new StringBuilder();
+    public static void GetHistorial() throws SQLException {
         try {
-            resultSet = statement.executeQuery("SELECT * FROM `ganadores`");
+            Connection();
+            resultSet = statement.executeQuery("SELECT * FROM `HISTORIAL`");
+            System.out.println("****** Historial ******");
             while (resultSet.next()) {
-                switch (resultSet.getInt(3)) {
-                    case 1:
-                        PrimerPuesto.append(" ").append(resultSet.getString(2)).append("    ").append(resultSet.getInt(4)).append("\n");
-                        break;
-
-                    case 2:
-                        SegundoPuesto.append(" ").append(resultSet.getString(2)).append("    ").append(resultSet.getInt(4)).append("\n");
-                        break;
-
-                    case 3:
-                        TercerPuesto.append(" ").append(resultSet.getString(2)).append("    ").append(resultSet.getInt(4)).append("\n");
-                        break;
-
-                    default:
-                        break;
-                }
+                System.out.println("ID : " + resultSet.getString(1));
+                System.out.println("Jugador : " + resultSet.getString(2));
+                System.out.println("Fecha De Ingreso : " + resultSet.getString(3));
+                System.out.println("Puntuacion : " + resultSet.getString(4));
+                System.out.println("Nivel : " + resultSet.getString(5));
+                System.out.print("____________________________________\n");
             }
-            System.out.println("      Ganadores");
-            System.out.println("    Primer Lugar");
-            System.out.println("  Nombre    Cantidad\n");
-            System.out.println(PrimerPuesto);
-            System.out.println("    Segundo Lugar");
-            System.out.println("  Nombre    Cantidad\n");
-            System.out.println(SegundoPuesto);
-            System.out.println("    Tercer Lugar ");
-            System.out.println("  Nombre    Cantidad\n");
-            System.out.println(TercerPuesto);
+
         } catch (SQLException ignored) {
         } finally {
             BDUtils.desconectar();
