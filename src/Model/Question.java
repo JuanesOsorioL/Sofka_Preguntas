@@ -3,7 +3,7 @@ package Model;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Question{
+public class Question {
 
     private String titulo;
     private ArrayList<Option> lstOption;

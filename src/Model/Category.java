@@ -3,9 +3,8 @@ package Model;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Category{
+public class Category {
 
-  
     private String name;
     private int level;
     private ArrayList<Question> lstQuestion;

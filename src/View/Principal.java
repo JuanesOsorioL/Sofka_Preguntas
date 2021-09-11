@@ -1,16 +1,18 @@
 package View;
 
+import Controller.BDUtils;
 import Model.Category;
 import Model.Option;
-import Model.Player;
+import Model.Premio;
 import Model.Question;
 import Model.Round;
-
+import java.sql.*;
 import java.util.*;
+import java.time.*;
 
 public class Principal {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         Round round = new Round();
         Scanner input = new Scanner(System.in);
         Category Category = new Category();
@@ -31,7 +33,7 @@ public class Principal {
                     round = defaultQuestion(round);
                     setting = true;
                     break;
-                    
+
                 case 2:
 
                     ArrayList<Category> listCategory = new ArrayList<Category>();
@@ -75,46 +77,76 @@ public class Principal {
                     if (setting) {
                         System.out.print("Nombre Jugador: ");
                         String name = input.nextLine();
-                        Player player = new Player(name);
+                        LocalDate Date = LocalDate.now();
+                        Premio win = new Premio(1, name);
                         Category selectCategory;
                         Question selectQuestion;
                         for (int i = 0; i < 5; i++) {
                             selectCategory = new Category(round.SelecCategory(i));
                             System.out.println(selectCategory.getName());
-                            System.out.println(selectCategory.getLevel());
+                            System.out.println(selectCategory.getLevel() + 1);
                             selectQuestion = new Question(selectCategory.randomQuestion());
                             System.out.println(selectQuestion.getTitulo());
                             selectQuestion.randomoptions();
                             int n = input.nextInt();
-                            if (selectQuestion.validate(n)) {
-                                System.out.println("verdadero");
-                            } else {
-                                System.out.println("false");
-                            }
 
+                            if (selectQuestion.validate(n)) {
+                                System.out.println("Respuesta correcta");
+                                System.out.println("Premio acumulado actual = " + win.winQuestion(i + 1));
+
+                                if ((selectCategory.getLevel() + 1) == 5) {
+                                    System.out.println("Felicitaciones LLegaste al final con una puntuacion perfecta.");
+                                    n = 2;
+                                } else {
+                                    System.out.println("Quieres seguir con el proximo nivel?.");
+                                    System.out.println("1. Si");
+                                    System.out.println("2. No");
+                                    n = input.nextInt();
+                                }
+                                if (n == 2) {
+                                    savePlayer(win.getNombre(), Date, win.getPremio(), selectCategory.getLevel() + 1);
+                                    control = false;
+                                    i = 5;
+                                }
+                            } else {
+                                System.out.println("Respuesta incorrecta");
+                                control = false;
+                                System.out.println("Acumulado actual = " + win.getPremio());
+                                savePlayer(win.getNombre(), Date, win.getPremio(), selectCategory.getLevel());
+                                i = 5;
+                            }
                         }
                     } else {
                         System.out.println("Primero!! Registre las preguntas");
                     }
-
                     break;
-
                 case 4:
                     control = false;
                     break;
                 default:
                     break;
-            };
-
+            }
         }
+    }
 
+    public static void savePlayer(String player, LocalDate fecha, int score, int level) throws SQLException {
+        try {
+            BDUtils.Connection();
+            int resulta = BDUtils.setGuardar(player, fecha, score, level);
+            if (resulta == 1) {
+                System.out.println("Jugador se guardo Correctamente");
+            } else {
+                System.out.println("Jugador no se guardo Correctamente");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            BDUtils.desconectar();
+        }
     }
 
     public static Round defaultQuestion(Round round) {
-        //prueba rapida
-
         ArrayList<Category> listCategory = new ArrayList<Category>();
-
         ///////////////////////////categoria1
         ArrayList<Question> listQuestion = new ArrayList<Question>();
         // pretunta 1

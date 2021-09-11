@@ -1,7 +1,7 @@
-
 package Model;
 
-public class Option{
+public class Option {
+
     private String answer;
     private boolean correct;
 
@@ -26,6 +26,4 @@ public class Option{
         this.correct = correct;
     }
 
-   
-    
 }
