@@ -1,30 +1,31 @@
 
 package Model;
 
-public class Option {
-    private String respuesta;
-    private boolean Correcta;
+public class Option{
+    private String answer;
+    private boolean correct;
 
-    public Option(String respuesta, boolean Correcta) {
-        this.respuesta = respuesta;
-        this.Correcta = Correcta;
+    public Option(String answer, boolean correct) {
+        this.answer = answer;
+        this.correct = correct;
     }
 
-    public String getRespuesta() {
-        return respuesta;
+    public String getAnswer() {
+        return answer;
     }
 
-    public void setRespuesta(String respuesta) {
-        this.respuesta = respuesta;
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 
-    public boolean isCorrecta() {
-        return Correcta;
+    public boolean isCorrect() {
+        return correct;
     }
 
-    public void setCorrecta(boolean Correcta) {
-        this.Correcta = Correcta;
+    public void setCorrect(boolean correct) {
+        this.correct = correct;
     }
-    
+
+   
     
 }
